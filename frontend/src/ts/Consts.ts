@@ -13,6 +13,8 @@ export const GET_ALL_PROJECTS_ROUTE = `${SERVER_IP}/authorize/getAllProjects`;
 export const GET_OWN_PROJECTS_ROUTE = `${SERVER_IP}/authorize/getOwnProjects`;
 export const GET_ALL_FEEDBACK_QUESTIONS_ROUTE = `${SERVER_IP}/authorize/getAllFeedbackQuestions`;
 
+export const TIMESHEET_UPLOAD_ROUTE = `${SERVER_IP}/timesheet/upload`;
+
 export const CHANGE_PASSWORD_ROUTE = `${SERVER_IP}/changepass`;
 export const CHANGE_PASSWORD_REQUESTING_EMAIL_ROUTE = `${SERVER_IP}/changepass/getLinkedEmail`;
 export const FORGOT_PASSWORD_ROUTE = `${SERVER_IP}/forgotpass`;

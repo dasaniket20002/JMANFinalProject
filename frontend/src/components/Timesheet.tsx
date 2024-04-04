@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   getFirstDayOfWeek,
   getlastDayOfWeek,
@@ -15,8 +15,10 @@ import {
 import {
   DECODE_JWT_ROUTE,
   GET_OWN_PROJECTS_ROUTE,
+  GET_PERMISSIONS,
   SIGNOUT,
   TIMESHEET_ACTIVITIES,
+  TIMESHEET_UPLOAD_ROUTE,
 } from "../ts/Consts";
 import Container from "./misc/Container";
 import Button from "./misc/Button";
@@ -36,6 +38,59 @@ import { useNavigate } from "react-router-dom";
 
 const Timesheet = () => {
   const navigate = useNavigate();
+
+  const [userData, setUserData] = useState<jwt_decoded_response>();
+  const getUserData = () => {
+    axios
+      .get(DECODE_JWT_ROUTE, {
+        params: { token: sessionStorage.getItem("jwt") },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          setUserData(res.data as jwt_decoded_response);
+        } else {
+          navigate(`/${SIGNOUT}`);
+        }
+      })
+      .catch(() => {
+        navigate(`/${SIGNOUT}`);
+      });
+  };
+
+  const [projects, setProjects] = useState<Project_type[]>([]);
+  const getOwnProjects = () => {
+    if (!userData) return;
+    axios
+      .get(GET_OWN_PROJECTS_ROUTE, {
+        headers: {
+          auth: `${userData.role} ${sessionStorage.getItem("jwt")}`,
+        },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          setProjects(res.data.projects);
+        } else {
+          console.log(res.data.err);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const [accessTo, setAccessTo] = useState<string[]>([]);
+  const getAccessTo = () => {
+    if (!userData) return;
+    axios
+      .get(GET_PERMISSIONS, {
+        headers: {
+          auth: `${userData.role} ${sessionStorage.getItem("jwt")}`,
+        },
+      })
+      .then((res) => {
+        if (res.status === 200) setAccessTo(res.data.access_to);
+      });
+  };
 
   const [dateStart, setDateStart] = useState(getFirstDayOfWeek());
   const [dateEnd, setDateEnd] = useState(getlastDayOfWeek());
@@ -62,33 +117,82 @@ const Timesheet = () => {
     [[0, 0, 0, 0, 0, 0, 0]],
   ];
   const commentDataArrayDefaultValue = [[""], [""]];
-  const selectDataArrayDefaultValue = [[["", ""]], [["", ""]]];
-  const numRowsPerActivityDefaultValue = [1, 1];
+  const projectSelectArrayDefaultValue = [[""], [""]];
+  const taskSelectArrayDefaultValue = [[""], [""]];
 
   const [rowDataArray, setRowDataArray] = useState(rowDataArrayDefaultValue);
   const [commentDataArray, setCommentDataArray] = useState(
     commentDataArrayDefaultValue
   );
-  const [selectDataArray, setSelectDataArray] = useState(
-    selectDataArrayDefaultValue
+  const [projectSelectDataArray, setProjectSelectDataArray] = useState(
+    projectSelectArrayDefaultValue
   );
-  const [numRowsPerActivity, setNumRowsPerActivity] = useState(
-    numRowsPerActivityDefaultValue
+  const [taskSelectDataArray, setTaskSelectDataArray] = useState(
+    taskSelectArrayDefaultValue
   );
+  const [numRowsPerActivity, setNumRowsPerActivity] = useState([
+    ...(Array.from({ length: TIMESHEET_ACTIVITIES.length }) as number[]),
+  ]);
+  const [timesheetActivities, setTimesheetActivities] =
+    useState(TIMESHEET_ACTIVITIES);
 
   const clearAllInputFields = () => {
     setRowDataArray(rowDataArrayDefaultValue);
     setCommentDataArray(commentDataArrayDefaultValue);
-    setSelectDataArray(selectDataArrayDefaultValue);
-    setNumRowsPerActivity(numRowsPerActivityDefaultValue);
+    setProjectSelectDataArray(projectSelectArrayDefaultValue);
+    setTaskSelectDataArray(taskSelectArrayDefaultValue);
+    setNumRowsPerActivity([
+      ...(Array.from({ length: timesheetActivities.length }) as number[]),
+    ]);
   };
 
   const [infoText, infoSetter] = useState<string>("");
   const setInfoText = (text: string) => infoSetter(`${text}~${Math.random()}`);
   const [isInfoError, setInfoError] = useState<boolean>(true);
+  const timesheetUploadButtonRef = useRef<HTMLButtonElement>(null);
 
   const onTimesheetUploadClicked = () => {
-    
+    setInfoText("Loading...");
+    setInfoError(false);
+    if (timesheetUploadButtonRef.current)
+      timesheetUploadButtonRef.current.disabled = true;
+
+    axios
+      .post(
+        TIMESHEET_UPLOAD_ROUTE,
+        {
+          date_start: getDateStr(dateStart),
+          date_end: getDateStr(dateEnd),
+          project_select_data: projectSelectDataArray,
+          task_select_data: taskSelectDataArray,
+          comment_data: commentDataArray,
+          row_data: rowDataArray,
+          num_rows_per_activity: numRowsPerActivity,
+          activity_names: timesheetActivities,
+        },
+        {
+          headers: {
+            auth: `${userData?.role} ${sessionStorage.getItem("jwt")}`,
+          },
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          setInfoText(res.data.msg);
+          setInfoError(false);
+        } else {
+          setInfoText(res.data.err);
+          setInfoError(true);
+        }
+        if (timesheetUploadButtonRef.current)
+          timesheetUploadButtonRef.current.disabled = false;
+      })
+      .catch((err) => {
+        setInfoText(err.code);
+        setInfoError(true);
+        if (timesheetUploadButtonRef.current)
+          timesheetUploadButtonRef.current.disabled = false;
+      });
   };
 
   useEffect(() => {
@@ -96,116 +200,87 @@ const Timesheet = () => {
     clearAllInputFields();
   }, [dateStart, dateEnd]);
 
-  const [userData, setUserData] = useState<jwt_decoded_response>();
-  const getUserData = () => {
-    axios
-      .get(DECODE_JWT_ROUTE, {
-        params: { token: sessionStorage.getItem("jwt") },
-      })
-      .then((res) => {
-        if (res.status === 200) {
-          setUserData(res.data as jwt_decoded_response);
-        } else {
-          navigate(`/${SIGNOUT}`);
-        }
-      })
-      .catch(() => {
-        navigate(`/${SIGNOUT}`);
-      });
-  };
-
-  const [projects, setProjects] = useState<Project_type[]>([]);
-
-  const getOwnProjects = () => {
-    if (!userData) return;
-    axios
-      .get(GET_OWN_PROJECTS_ROUTE, {
-        headers: {
-          auth: `${userData.role} ${sessionStorage.getItem("jwt")}`,
-        },
-      })
-      .then((res) => {
-        if (res.status === 200) {
-          setProjects(res.data.projects);
-        } else {
-          console.log(res.data.err);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
   useEffect(() => {
     getUserData();
   }, []);
 
   useEffect(() => {
+    getAccessTo();
     getOwnProjects();
   }, [userData]);
 
   return (
     <Container containerHeading="Timesheet" headerType="l1">
-      <ContainerForm
-        containerHeading="Timesheet"
-        headerType="l3"
-        onSubmit={(e) => {
-          e.preventDefault();
-          onTimesheetUploadClicked();
-        }}
-      >
-        <section className="flex flex-col md:flex-row gap-4 justify-between items-center ">
-          <p>
-            Total Hours:{" "}
-            <span className="font-medium text-xl">{totalHours}</span>
-          </p>
-          <span className="flex items-center">
-            <Button
-              className="px-4 py-1 mr-8 shadow-md"
-              onClick={(e) => {
-                e.preventDefault();
-                increaseDatesHandle();
-              }}
-            >
-              {"<"}
-            </Button>
-            <p className="text-center outline-none rounded focus:border focus:border-gray-800">
-              {getDateStr(dateStart)} - {getDateStr(dateEnd)}
+      {accessTo.includes("TIMESHEET") ? (
+        <ContainerForm
+          containerHeading="Timesheet"
+          headerType="l3"
+          onSubmit={(e) => {
+            e.preventDefault();
+            onTimesheetUploadClicked();
+          }}
+        >
+          <section className="flex flex-col md:flex-row gap-4 justify-between items-center ">
+            <p>
+              Total Hours:{" "}
+              <span className="font-medium text-xl">{totalHours}</span>
             </p>
-            <Button
-              className="px-4 py-1 ml-8 shadow-md"
-              onClick={(e) => {
-                e.preventDefault();
-                decreaseDatesHandle();
-              }}
-            >
-              {">"}
-            </Button>
-          </span>
-        </section>
+            <span className="flex items-center">
+              <Button
+                className="px-4 py-1 mr-8 shadow-md"
+                onClick={(e) => {
+                  e.preventDefault();
+                  increaseDatesHandle();
+                }}
+              >
+                {"<"}
+              </Button>
+              <p className="text-center outline-none rounded focus:border focus:border-gray-800">
+                {getDateStr(dateStart)} - {getDateStr(dateEnd)}
+              </p>
+              <Button
+                ref={timesheetUploadButtonRef}
+                className="px-4 py-1 ml-8 shadow-md"
+                onClick={(e) => {
+                  e.preventDefault();
+                  decreaseDatesHandle();
+                }}
+              >
+                {">"}
+              </Button>
+            </span>
+          </section>
 
-        <TimesheetTable
-          dates={datesBetween}
-          numRowsPerActivity={numRowsPerActivity}
-          setNumRowsPerActivity={setNumRowsPerActivity}
-          selectDataArray={selectDataArray}
-          setSelectDataArray={setSelectDataArray}
-          rowDataArray={rowDataArray}
-          setRowDataArray={setRowDataArray}
-          commentDataArray={commentDataArray}
-          setCommentDataArray={setCommentDataArray}
-          totalHours={totalHours}
-          setTotalHours={setTotalHours}
-          projects={projects}
-        />
+          <TimesheetTable
+            dates={datesBetween}
+            numRowsPerActivity={numRowsPerActivity}
+            setNumRowsPerActivity={setNumRowsPerActivity}
+            rowDataArray={rowDataArray}
+            setRowDataArray={setRowDataArray}
+            commentDataArray={commentDataArray}
+            setCommentDataArray={setCommentDataArray}
+            projectSelectDataArray={projectSelectDataArray}
+            setProjectSelectDataArray={setProjectSelectDataArray}
+            taskSelectDataArray={taskSelectDataArray}
+            setTaskSelectDataArray={setTaskSelectDataArray}
+            totalHours={totalHours}
+            setTotalHours={setTotalHours}
+            timesheetActivities={timesheetActivities}
+            projects={projects}
+          />
 
-        <Button type="submit">Upload Timesheet</Button>
-        <InfoDisplay
-          isError={isInfoError}
-          infoText={infoText}
-          className="-my-6"
-        />
-      </ContainerForm>
+          <Button type="submit">Upload Timesheet</Button>
+          <InfoDisplay
+            isError={isInfoError}
+            infoText={infoText}
+            className="-my-6"
+          />
+        </ContainerForm>
+      ) : (
+        <p className="text-red-500 text-2xl font-medium">
+          You do not have access to Timesheet
+        </p>
+      )}
     </Container>
   );
 };
@@ -214,14 +289,17 @@ const TimesheetTable = ({
   dates,
   numRowsPerActivity,
   setNumRowsPerActivity,
-  selectDataArray,
-  setSelectDataArray,
   rowDataArray,
   setRowDataArray,
   commentDataArray,
   setCommentDataArray,
+  projectSelectDataArray,
+  setProjectSelectDataArray,
+  taskSelectDataArray,
+  setTaskSelectDataArray,
   totalHours,
   setTotalHours,
+  timesheetActivities,
   projects,
 }: TimesheetTable_type) => {
   const [columnSum, setColumnSum] = useState([0, 0, 0, 0, 0, 0, 0]);
@@ -246,10 +324,15 @@ const TimesheetTable = ({
       commentData.push("");
       setCommentDataArray(commentDataArrayM);
 
-      let selectDataArrayM = [...selectDataArray];
-      let selectData = selectDataArrayM[index];
-      selectData.push(["", ""]);
-      setSelectDataArray(selectDataArrayM);
+      let projectDataArrayM = [...projectSelectDataArray];
+      let projectData = projectDataArrayM[index];
+      projectData.push("");
+      setProjectSelectDataArray(projectDataArrayM);
+
+      let taskDataArrayM = [...taskSelectDataArray];
+      let taskData = taskDataArrayM[index];
+      taskData.push("");
+      setCommentDataArray(taskDataArrayM);
     };
   };
 
@@ -265,10 +348,15 @@ const TimesheetTable = ({
       commentData.pop();
       setCommentDataArray(commentDataArrayM);
 
-      let selectDataArrayM = [...selectDataArray];
-      let selectData = selectDataArrayM[index];
-      selectData.pop();
-      setSelectDataArray(selectDataArrayM);
+      let projectDataArrayM = [...projectSelectDataArray];
+      let projectData = projectDataArrayM[index];
+      projectData.pop();
+      setProjectSelectDataArray(projectDataArrayM);
+
+      let taskDataArrayM = [...taskSelectDataArray];
+      let taskData = taskDataArrayM[index];
+      taskData.pop();
+      setCommentDataArray(taskDataArrayM);
     };
   };
 
@@ -283,14 +371,24 @@ const TimesheetTable = ({
     };
   };
 
-  const setSelectDataForActivity = (activityIndex: number) => {
+  const setProjectSelectDataForActivity = (activityIndex: number) => {
     return (rowIndex: number) => {
-      return (index: number, value: string) => {
-        let selectDataArrayM = [...selectDataArray];
-        let activityData = selectDataArrayM[activityIndex];
-        let rowData = activityData[rowIndex];
-        rowData[index] = value;
-        setSelectDataArray(selectDataArrayM);
+      return (value: string) => {
+        let projectSelectDataArrayM = [...projectSelectDataArray];
+        let activityData = projectSelectDataArrayM[activityIndex];
+        activityData[rowIndex] = value;
+        setProjectSelectDataArray(projectSelectDataArrayM);
+      };
+    };
+  };
+
+  const setTaskSelectDataForActivity = (activityIndex: number) => {
+    return (rowIndex: number) => {
+      return (value: string) => {
+        let taskSelectDataArrayM = [...taskSelectDataArray];
+        let activityData = taskSelectDataArrayM[activityIndex];
+        activityData[rowIndex] = value;
+        setTaskSelectDataArray(taskSelectDataArrayM);
       };
     };
   };
@@ -376,7 +474,7 @@ const TimesheetTable = ({
         <TableHeader className="text-base">Total</TableHeader>
       </TableHead>
       <TableBody>
-        {TIMESHEET_ACTIVITIES.map((item, index) => (
+        {timesheetActivities.map((item, index) => (
           <Activity
             key={index}
             activity_name={item}
@@ -386,10 +484,12 @@ const TimesheetTable = ({
             decreaseActivityRows={decreaseActivityRowsForIndex(index)}
             rowData={rowDataArray[index]}
             setRowData={setRowDataForActivity(index)}
-            selectData={selectDataArray[index]}
-            setSelectData={setSelectDataForActivity(index)}
             commentData={commentDataArray[index]}
             setCommentData={setCommentDataForActivity(index)}
+            projectData={projectSelectDataArray[index]}
+            setProjectData={setProjectSelectDataForActivity(index)}
+            taskData={taskSelectDataArray[index]}
+            setTaskData={setTaskSelectDataForActivity(index)}
             projects={projects}
           />
         ))}
@@ -418,10 +518,12 @@ const Activity = ({
   decreaseActivityRows,
   rowData,
   setRowData,
-  selectData,
-  setSelectData,
   commentData,
   setCommentData,
+  projectData,
+  setProjectData,
+  taskData,
+  setTaskData,
   projects,
 }: Activity_type) => {
   const [rowSum, setRowSum] = useState([0]);
@@ -461,10 +563,12 @@ const Activity = ({
           <InputFieldsCollection
             rowData={rowData[i]}
             setRowData={setRowData(i)}
-            selectData={selectData[i]}
-            setSelectData={setSelectData(i)}
             commentData={commentData[i]}
             setCommentData={setCommentData(i)}
+            projectData={projectData[i]}
+            setProjectData={setProjectData(i)}
+            taskData={taskData[i]}
+            setTaskData={setTaskData(i)}
             projects={projects}
           />
           <TableCell>{rowSum[i]}</TableCell>
@@ -501,10 +605,12 @@ const Activity = ({
 const InputFieldsCollection = ({
   rowData,
   setRowData,
-  selectData,
-  setSelectData,
   commentData,
   setCommentData,
+  projectData,
+  setProjectData,
+  taskData,
+  setTaskData,
   projects,
 }: InputFieldCollection_type) => {
   const handleNumericInputs = (index: number, value: string) => {
@@ -522,8 +628,8 @@ const InputFieldsCollection = ({
       <TableCell className="max-w-24">
         <Select
           id="project"
-          value={selectData[0]}
-          onChange={(e) => setSelectData(0, e.target.value)}
+          value={projectData}
+          onChange={(e) => setProjectData(e.target.value)}
         >
           {projects.map((item, index) => (
             <option key={index} value={item.name}>
@@ -535,8 +641,8 @@ const InputFieldsCollection = ({
       <TableCell className="max-w-24">
         <Select
           id="task"
-          value={selectData[1]}
-          onChange={(e) => setSelectData(1, e.target.value)}
+          value={taskData}
+          onChange={(e) => setTaskData(e.target.value)}
         ></Select>
       </TableCell>
       <TableCell className="max-w-24">
