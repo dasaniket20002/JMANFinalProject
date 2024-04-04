@@ -14,10 +14,12 @@ const ROUTE_PERMISSION_DEFS = {
   "/changepass/getLinkedEmail": "",
   "/forgotpass": "",
   "/timesheet/upload": "TIMESHEET",
+  "/timesheet/fetchOwn": "TIMESHEET",
+  "/timesheet/fetchAll": "TIMESHEET_ALL",
 };
 
 const GET_TASK_PERFORMED = (req) => {
-  return ROUTE_PERMISSION_DEFS[req.originalUrl];
+  return ROUTE_PERMISSION_DEFS[req._parsedOriginalUrl ? req._parsedOriginalUrl.pathname : req.originalUrl];
 };
 
 module.exports = {

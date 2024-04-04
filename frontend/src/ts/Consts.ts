@@ -14,6 +14,8 @@ export const GET_OWN_PROJECTS_ROUTE = `${SERVER_IP}/authorize/getOwnProjects`;
 export const GET_ALL_FEEDBACK_QUESTIONS_ROUTE = `${SERVER_IP}/authorize/getAllFeedbackQuestions`;
 
 export const TIMESHEET_UPLOAD_ROUTE = `${SERVER_IP}/timesheet/upload`;
+export const TIMESHEET_FETCH_ROUTE = `${SERVER_IP}/timesheet/fetchOwn`;
+export const TIMESHEET_FETCH_ALL_ROUTE = `${SERVER_IP}/timesheet/fetchAll`;
 
 export const CHANGE_PASSWORD_ROUTE = `${SERVER_IP}/changepass`;
 export const CHANGE_PASSWORD_REQUESTING_EMAIL_ROUTE = `${SERVER_IP}/changepass/getLinkedEmail`;

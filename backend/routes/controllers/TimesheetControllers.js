@@ -45,7 +45,7 @@ const TimesheetUploadController = async (req, res) => {
       date_start === "" ||
       date_end === "" ||
       JSON.stringify(project_select_data) ===
-        JSON.stringify(projectSelectDefaultValue) ||
+      JSON.stringify(projectSelectDefaultValue) ||
       JSON.stringify(row_data) === JSON.stringify(rowDataDefaultValue)
     )
       return res.status(202).json({ err: "All fields required" });
@@ -62,9 +62,10 @@ const TimesheetUploadController = async (req, res) => {
       timesheet.row_data = row_data;
       timesheet.num_rows_per_activity = num_rows_per_activity;
       timesheet.activity_names = activity_names;
+      timesheet.uploaded_at = Date.now();
 
       await timesheet.save();
-      return res.status(200).json({ msg: "Saved Timesheet" });
+      return res.status(200).json({ msg: "Updated Timesheet" });
     }
     const newTimesheet = new Timesheet({
       date_start,
@@ -85,6 +86,64 @@ const TimesheetUploadController = async (req, res) => {
   }
 };
 
+const TimesheetFetchController = async (req, res) => {
+  try {
+    const { date_start, date_end } = req.query;
+
+    if (
+      !date_start ||
+      !date_end ||
+      date_start === "" ||
+      date_end === ""
+    )
+      return res.status(202).json({ err: "All fields required" });
+
+    const timesheet = await Timesheet.findOne({
+      date_start,
+      date_end,
+      email: req.decoded.email,
+    });
+    if (!timesheet)
+      return res.status(202).json({ err: "Timesheet not found" });
+
+    return res.status(200).json({ timesheet: timesheet });
+
+  } catch (error) {
+    return res.status(500).json({ msg: "Internal Error", err: error });
+  }
+};
+
+const TimesheetFetchAllController = async (req, res) => {
+  try {
+    const { email, date_start, date_end } = req.body;
+    if (
+      !email ||
+      !date_start ||
+      !date_end ||
+      date_start === "" ||
+      date_end === "" ||
+      email === ""
+    )
+      return res.status(202).json({ err: "All Fields Required" });
+
+    const timesheet = await Timesheet.findOne({
+      date_start: date_start,
+      date_end: date_end,
+      email: email,
+    });
+
+    if (!timesheet)
+      return res.status(202).json({ err: 'timesheet not found' });
+
+    return res.status(200).json({ timesheet: timesheet });
+
+  } catch (error) {
+    return res.status(500).json({ msg: "Internal Error", err: error });
+  }
+}
+
 module.exports = {
   TimesheetUploadController,
+  TimesheetFetchController,
+  TimesheetFetchAllController,
 };
