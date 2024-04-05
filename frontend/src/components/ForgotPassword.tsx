@@ -4,6 +4,9 @@ import axios from "axios";
 import { FORGOT_PASSWORD_ROUTE, ROOT } from "../ts/Consts";
 import { Link } from "react-router-dom";
 import Button from "./misc/Button";
+import Container from "./misc/Container";
+import ContainerForm from "./misc/ContainerForm";
+import Input from "./misc/Input";
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState<string>("");
@@ -47,30 +50,25 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="px-6 md:ml-72 md:px-16 2xl:px-64 flex flex-col">
-      <header className="w-full py-6 font-semibold text-3xl">
-        Forgot Password
-      </header>
-
-      <form
-        className="flex flex-col gap-16 py-16"
+    <Container containerHeading="Forgot Password" headerType="l1">
+      <ContainerForm
         onSubmit={(e) => {
           e.preventDefault();
           onSendLinkClicked();
         }}
+        containerHeading="Forgot Password"
+        headerType="l3"
       >
-        <span className="flex flex-col gap-2">
-          <label htmlFor="email">Email</label>
-          <input
-            className="p-2 -mx-2 rounded outline-none transition shadow-md focus:shadow-lg"
-            type="email"
-            name="email"
-            id="email"
-            placeholder="Email"
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
-          />
-        </span>
+        <Input
+          type="email"
+          name="email"
+          id="email"
+          placeholder="Email"
+          onChange={(e) => setEmail(e.target.value)}
+          value={email}
+          label="Email"
+          bulged
+        />
 
         <Button ref={sendLinkButtonRef} type="submit" bulged>
           Send Link
@@ -80,7 +78,7 @@ const ForgotPassword = () => {
           infoText={infoDisplayText}
           className="-mt-12"
         />
-      </form>
+      </ContainerForm>
 
       <Link
         to={ROOT}
@@ -88,7 +86,7 @@ const ForgotPassword = () => {
       >
         Cancel
       </Link>
-    </div>
+    </Container>
   );
 };
 

@@ -61,9 +61,30 @@ const GetOwnProjectsController = async (req, res) => {
   }
 };
 
+const GetOwnFeedbackQuestionsController = async (req, res) => {
+  try {
+    const projectsRaw = await Project.find().exec();
+    const projectsOwnFeedbackQuestionIds = projectsRaw
+      .filter((item) => item.users.includes(req.decoded.email))
+      .map((item) => item.question_ids)
+      .flat();
+
+    const feedbackQuestionsRaw = await FeedbackQuestion.find().exec();
+    const feedbackQuestionsOwn = feedbackQuestionsRaw.filter(
+      (feedbackQuestion) =>
+        projectsOwnFeedbackQuestionIds.includes(feedbackQuestion._id.toString())
+    );
+
+    return res.status(200).json({ feedbackQuestions: feedbackQuestionsOwn });
+  } catch (error) {
+    return res.status(500).json({ msg: "Internal Error", err: error });
+  }
+};
+
 module.exports = {
   GetOwnProjectsController,
   GetAllFeedbackQuestionsController,
   GetAllProjectsController,
   GetAllUsersController,
+  GetOwnFeedbackQuestionsController,
 };

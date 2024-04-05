@@ -10,6 +10,7 @@ const ROUTE_PERMISSION_DEFS = {
   "/authorize/getAllProjects": "SEE_PROJECTS",
   "/authorize/getOwnProjects": "SEE_OWN_PROJECTS",
   "/authorize/getAllFeedbackQuestions": "SEE_QUESTIONS",
+  "/authorize/getOwnFeedbackQuestions": "SEE_OWN_QUESTIONS",
   "/changepass": "",
   "/changepass/getLinkedEmail": "",
   "/forgotpass": "",
@@ -19,7 +20,9 @@ const ROUTE_PERMISSION_DEFS = {
 };
 
 const GET_TASK_PERFORMED = (req) => {
-  return ROUTE_PERMISSION_DEFS[req._parsedOriginalUrl ? req._parsedOriginalUrl.pathname : req.originalUrl];
+  return ROUTE_PERMISSION_DEFS[
+    req._parsedOriginalUrl ? req._parsedOriginalUrl.pathname : req.originalUrl
+  ];
 };
 
 module.exports = {

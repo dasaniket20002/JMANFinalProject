@@ -15,20 +15,29 @@ const authorize = async (req, res, next) => {
     if (!authLevels) return res.status(202).json({ err: "Role not Found" });
 
     if (!authLevels.access_to.includes(TASK_PERFORMED))
-      return res.status(400).json({ err: "Authorization error" });
+      return res
+        .status(400)
+        .json({ err: `Authorization error for ${TASK_PERFORMED}` });
 
     if (!auth_header[1])
-      return res.status(400).json({ err: "Authorization error" });
+      return res
+        .status(400)
+        .json({ err: `Authorization error for ${TASK_PERFORMED}` });
 
     const decoded = jwt.verify(auth_header[1], process.env.JWT_SECRET);
-    if (!decoded) return res.status(400).json({ err: "Authorization error" });
+    if (!decoded)
+      return res
+        .status(400)
+        .json({ err: `Authorization error for ${TASK_PERFORMED}` });
 
     const decodedAuthLevels = await AuthLevels.findOne({ role: decoded.role });
     if (!decodedAuthLevels)
       return res.status(202).json({ err: "Role not Found" });
 
     if (!decodedAuthLevels.access_to.includes(TASK_PERFORMED))
-      return res.status(400).json({ err: "Authorization error" });
+      return res
+        .status(400)
+        .json({ err: `Authorization error for ${TASK_PERFORMED}` });
 
     req.decoded = decoded;
   } catch (error) {

@@ -7,6 +7,7 @@ const {
   GetAllProjectsController,
   GetOwnProjectsController,
   GetAllFeedbackQuestionsController,
+  GetOwnFeedbackQuestionsController,
 } = require("./controllers/GetAllDetailsControllers");
 const {
   DecodeJWTController,
@@ -21,27 +22,36 @@ router.get("/decodeJWT", DecodeJWTController);
 router.get("/getPermissions", authorize, GetAllPermissionsController);
 
 // GET ALL USERS
-// must have headers as { 'Auth':role + " " + jwt } to respond, it should match 'admin '+admin's jwt
+// must have headers as { 'Auth':role + " " + jwt }
 // returns list of all users from database
 router.get("/getAllUsers", authorize, GetAllUsersController);
 
 // GET ALL PROJECTS
-// must have headers as { 'Auth':role + " " + jwt } to respond, it should match 'admin '+admin's jwt
+// must have headers as { 'Auth':role + " " + jwt }
 // returns list of all projects from database
 router.get("/getAllProjects", authorize, GetAllProjectsController);
 
 // GET OWN PROJECTS
-// must have headers as { 'Auth':role + " " + jwt } to respond, it should match 'admin '+admin's jwt
-// returns list of all projects from database
+// must have headers as { 'Auth':role + " " + jwt }
+// returns list of own projects from database
 router.get("/getOwnProjects", authorize, GetOwnProjectsController);
 
 // GET ALL FEEDBACK QUESTIONS
-// must have headers as { 'Auth':role + " " + jwt } to respond, it should match 'admin '+admin's jwt
+// must have headers as { 'Auth':role + " " + jwt }
 // returns list of all feedback questions from database
 router.get(
   "/getAllFeedbackQuestions",
   authorize,
   GetAllFeedbackQuestionsController
+);
+
+// GET OWN FEEDBACK QUESTIONS
+// must have headers as { 'Auth':role + " " + jwt }
+// returns list of own feedback questions from database
+router.get(
+  "/getOwnFeedbackQuestions",
+  authorize,
+  GetOwnFeedbackQuestionsController
 );
 
 module.exports = router;

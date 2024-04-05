@@ -12,6 +12,7 @@ export const GET_ALL_USERS_ROUTE = `${SERVER_IP}/authorize/getAllUsers`;
 export const GET_ALL_PROJECTS_ROUTE = `${SERVER_IP}/authorize/getAllProjects`;
 export const GET_OWN_PROJECTS_ROUTE = `${SERVER_IP}/authorize/getOwnProjects`;
 export const GET_ALL_FEEDBACK_QUESTIONS_ROUTE = `${SERVER_IP}/authorize/getAllFeedbackQuestions`;
+export const GET_OWN_FEEDBACK_QUESTIONS_ROUTE = `${SERVER_IP}/authorize/getOwnFeedbackQuestions`;
 
 export const TIMESHEET_UPLOAD_ROUTE = `${SERVER_IP}/timesheet/upload`;
 export const TIMESHEET_FETCH_ROUTE = `${SERVER_IP}/timesheet/fetchOwn`;
