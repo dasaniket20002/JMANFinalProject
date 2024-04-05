@@ -125,13 +125,12 @@ const Feedback = () => {
   };
   const setTextAnswerForProject = (
     projectIndex: number,
-    feedbackQuestionIndex: number
+    feedbackQuestionIndex: number,
+    value: string
   ) => {
-    return (value: string) => {
-      let textAnswersM = [...textAnswers];
-      textAnswersM[projectIndex][feedbackQuestionIndex] = value;
-      setTextAnswers(textAnswersM);
-    };
+    let textAnswersM = [...textAnswers];
+    textAnswersM[projectIndex][feedbackQuestionIndex] = value;
+    setTextAnswers(textAnswersM);
   };
 
   useEffect(() => {
@@ -200,14 +199,19 @@ const Feedback = () => {
                       onChange={(e) =>
                         setTextAnswerForProject(
                           projectIndex,
-                          feedbackQuestionIndex
-                        )(e.target.value)
+                          feedbackQuestionIndex,
+                          e.target.value
+                        )
                       }
                       value={
                         textAnswers.length > 0
                           ? textAnswers[projectIndex][feedbackQuestionIndex]
-                          : undefined
+                          : ""
                       }
+                      type="text"
+                      name={feedbackQuestion._id + project._id}
+                      id={feedbackQuestion._id + project._id}
+                      placeholder="Feedback..."
                       label="Additional Feedback"
                       bulged
                     />
