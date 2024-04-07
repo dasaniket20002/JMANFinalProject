@@ -1,15 +1,7 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
-import {
-	DASHBOARD,
-	DECODE_JWT_ROUTE,
-	FEEDBACK,
-	SIGNOUT,
-	TIMESHEET,
-} from "../ts/Consts";
-import axios from "axios";
-import { jwt_decoded_response } from "../ts/Types";
+import { DASHBOARD, FEEDBACK, SIGNOUT, TIMESHEET } from "../ts/Consts";
 import { AuthenticationContext } from "./AuthenticationProvider";
 
 const Navigation = () => {
@@ -24,26 +16,6 @@ const Navigation = () => {
 const NavBar = () => {
 	const [isMenuOpen, setMenuOpen] = useState<boolean>(false);
 	const { userData } = useContext(AuthenticationContext);
-
-	// const [userData, setUserData] = useState<jwt_decoded_response>();
-	// const getUserData = () => {
-	// 	axios
-	// 		.get(DECODE_JWT_ROUTE, {
-	// 			params: { token: sessionStorage.getItem("jwt") },
-	// 		})
-	// 		.then((res) => {
-	// 			if (res.status === 200) {
-	// 				setUserData(res.data as jwt_decoded_response);
-	// 			}
-	// 		});
-	// };
-
-	// useEffect(() => {
-	// 	getUserData();
-	// 	// setInterval(() => {
-	// 	// 	getUserData();
-	// 	// }, 5000);
-	// }, [sessionStorage.getItem("jwt")]);
 
 	return (
 		<nav className="md:fixed w-full md:w-72 md:min-h-screen bg-gray-300 text-center md:text-left flex flex-col justify-between">

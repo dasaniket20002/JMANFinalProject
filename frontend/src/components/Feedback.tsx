@@ -1,17 +1,11 @@
-import { useEffect, useRef, useState } from "react";
-import {
-	FeedbackQuestion_type,
-	jwt_decoded_response,
-	Project_type,
-} from "../ts/Types";
+import { useContext, useEffect, useRef, useState } from "react";
+import { FeedbackQuestion_type, Project_type } from "../ts/Types";
 import Container from "./misc/Container";
 import ContainerForm from "./misc/ContainerForm";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import {
-	DECODE_JWT_ROUTE,
 	SIGNOUT,
-	GET_PERMISSIONS,
 	GET_OWN_PROJECTS_ROUTE,
 	GET_OWN_FEEDBACK_QUESTIONS_ROUTE,
 	FEEDBACK_UPLOAD_ROUTE,
@@ -20,40 +14,21 @@ import Radio from "./misc/Radio";
 import Input from "./misc/Input";
 import Button from "./misc/Button";
 import InfoDisplay from "./misc/InfoDisplay";
+import { AuthenticationContext } from "./AuthenticationProvider";
 
 const Feedback = () => {
 	const navigate = useNavigate();
-	const [userData, setUserData] = useState<jwt_decoded_response>();
-	const getUserData = () => {
-		axios
-			.get(DECODE_JWT_ROUTE, {
-				params: { token: sessionStorage.getItem("jwt") },
-			})
-			.then((res) => {
-				if (res.status === 200) {
-					setUserData(res.data as jwt_decoded_response);
-				} else {
-					navigate(`/${SIGNOUT}`);
-				}
-			})
-			.catch(() => {
-				navigate(`/${SIGNOUT}`);
-			});
-	};
 
-	const [accessTo, setAccessTo] = useState<string[]>([]);
-	const getAccessTo = () => {
-		if (!userData) return;
-		axios
-			.get(GET_PERMISSIONS, {
-				headers: {
-					auth: `${userData.role} ${sessionStorage.getItem("jwt")}`,
-				},
-			})
-			.then((res) => {
-				if (res.status === 200) setAccessTo(res.data.access_to);
-			});
-	};
+	const { userData, accessTo, JWT, isAuthenticating } = useContext(
+		AuthenticationContext
+	);
+
+	useEffect(() => {
+		if (isAuthenticating) return;
+		if (!JWT) {
+			navigate(`/${SIGNOUT}`);
+		}
+	}, [JWT, isAuthenticating]);
 
 	const [projects, setProjects] = useState<Project_type[]>([]);
 	const getOwnProjects = () => {
@@ -61,7 +36,7 @@ const Feedback = () => {
 		axios
 			.get(GET_OWN_PROJECTS_ROUTE, {
 				headers: {
-					auth: `${userData.role} ${sessionStorage.getItem("jwt")}`,
+					auth: `${userData?.role} ${JWT}`,
 				},
 			})
 			.then((res) => {
@@ -84,7 +59,7 @@ const Feedback = () => {
 		axios
 			.get(GET_OWN_FEEDBACK_QUESTIONS_ROUTE, {
 				headers: {
-					auth: `${userData.role} ${sessionStorage.getItem("jwt")}`,
+					auth: `${userData?.role} ${JWT}`,
 				},
 			})
 			.then((res) => {
@@ -169,9 +144,7 @@ const Feedback = () => {
 				},
 				{
 					headers: {
-						auth: `${userData?.role} ${sessionStorage.getItem(
-							"jwt"
-						)}`,
+						auth: `${userData?.role} ${JWT}`,
 					},
 				}
 			)
@@ -195,13 +168,7 @@ const Feedback = () => {
 			});
 	};
 
-	useEffect(() => {
-		getUserData();
-	}, []);
-
-	useEffect(() => {
-		getAccessTo();
-	}, [userData]);
+	const fetchAllFeedbacks = () => {};
 
 	useEffect(() => {
 		getOwnProjects();
@@ -263,6 +230,18 @@ const Feedback = () => {
 													  ][feedbackQuestionIndex]
 													: ""
 											}
+											name={
+												(feedbackQuestion && project
+													? feedbackQuestion._id +
+													  project._id
+													: "") + "Radio"
+											}
+											id={
+												(feedbackQuestion && project
+													? feedbackQuestion._id +
+													  project._id
+													: "") + "Radio"
+											}
 											label="Give Rating"
 											className="rounded bg-gray-100 px-2 py-4 shadow-md"
 											bulged
@@ -276,23 +255,26 @@ const Feedback = () => {
 												)
 											}
 											value={
-												textAnswers.length > 0
+												textAnswers.length > 0 &&
+												textAnswers[projectIndex][
+													feedbackQuestionIndex
+												]
 													? textAnswers[projectIndex][
 															feedbackQuestionIndex
 													  ]
 													: ""
 											}
 											name={
-												feedbackQuestion && project
+												(feedbackQuestion && project
 													? feedbackQuestion._id +
 													  project._id
-													: ""
+													: "") + "Input"
 											}
 											id={
-												feedbackQuestion && project
+												(feedbackQuestion && project
 													? feedbackQuestion._id +
 													  project._id
-													: ""
+													: "") + "Input"
 											}
 											type="text"
 											placeholder="Feedback..."

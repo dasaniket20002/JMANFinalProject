@@ -21,10 +21,10 @@ const FeedbackAnswerSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    uploadedAt: {
-        type: [[Date]],
-        default: [],
-    }
+    // uploadedAt: {
+    //     type: [[Date]],
+    //     default: [],
+    // }
 });
 
 const FeedbackAnswer = mongoose.model('FeedbackAnswer', FeedbackAnswerSchema);
