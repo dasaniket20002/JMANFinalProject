@@ -13,12 +13,7 @@ export type User_type = {
 	role: string;
 };
 
-export type AdditionalControls_type = {
-	userData: jwt_decoded_response;
-	accessTo: string[];
-};
 export type DashboardAdditionalControls_subtype = {
-	userData?: jwt_decoded_response;
 	users?: User_type[];
 	projects?: Project_type[];
 	feedbackQuestions?: FeedbackQuestion_type[];

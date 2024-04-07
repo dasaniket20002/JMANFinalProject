@@ -12,6 +12,7 @@ const authorizationRouter = require("./routes/authorization");
 const changePassRouter = require("./routes/changePassPath");
 const generateForgetPathRoute = require("./routes/generateForgetPath");
 const timesheetRoute = require("./routes/timesheet");
+const feedbackRoute = require('./routes/feedback');
 
 const app = express();
 app.use(require("cors")());
@@ -39,6 +40,7 @@ app.use("/authorize", authorizationRouter);
 app.use("/changepass", changePassRouter);
 app.use("/forgotpass", generateForgetPathRoute);
 app.use("/timesheet", timesheetRoute);
+app.use("/feedback", feedbackRoute);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

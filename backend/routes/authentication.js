@@ -7,6 +7,7 @@ const RegisterController = require("./controllers/RegisterController");
 const AddFeedbackQuestionController = require("./controllers/AddFeedbackQuestionController");
 const AddProjectController = require("./controllers/AddProjectController");
 const AssignProjectController = require("./controllers/AssignProjectController");
+const { FeedbackUploadController } = require("./controllers/FeedbackController");
 require("dotenv").config();
 
 // LOGIN ROUTE

@@ -1,15 +1,13 @@
 import axios from "axios";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import {
 	DEFAULT_PASSWORD,
-	DECODE_JWT_ROUTE,
 	SIGNOUT,
 	FORGOT_PASSWORD_ROUTE,
 	REGISTER_ROUTE,
 	GET_ALL_USERS_ROUTE,
 	ROLES,
-	GET_PERMISSIONS,
 	GET_ALL_PROJECTS_ROUTE,
 	GET_ALL_FEEDBACK_QUESTIONS_ROUTE,
 	ADD_PROJECT_ROUTE,
@@ -17,12 +15,10 @@ import {
 	ASSIGN_USER_TO_PROJECT_ROUTE,
 } from "../ts/Consts";
 import {
-	AdditionalControls_type,
 	DashboardAdditionalControls_subtype,
 	FeedbackQuestion_type,
 	Project_type,
 	User_type,
-	jwt_decoded_response,
 } from "../ts/Types";
 import InfoDisplay from "./misc/InfoDisplay";
 import Container from "./misc/Container";
@@ -37,13 +33,20 @@ import Table, {
 	TableHeader,
 	TableRow,
 } from "./misc/Table";
-
-// FFS REFACTOR THIS BS BEFORE SUBMISSION
+import { AuthenticationContext } from "./AuthenticationProvider";
 
 const Dashboard = () => {
 	const navigate = useNavigate();
-	const [userData, setUserData] = useState<jwt_decoded_response>();
-	const [accessTo, setAccessTo] = useState<string[]>([]);
+	const { userData, accessTo, JWT, isAuthenticating } = useContext(
+		AuthenticationContext
+	);
+
+	useEffect(() => {
+		if (isAuthenticating) return;
+		if (!JWT) {
+			navigate(`/${SIGNOUT}`);
+		}
+	}, [JWT, isAuthenticating]);
 
 	const [changePasswordInfoText, changePassInfoSetter] = useState<string>("");
 	const setChangePasswordInfoText = (text: string) =>
@@ -51,36 +54,6 @@ const Dashboard = () => {
 	const [isChangePasswordInfoError, setChangePasswordInfoError] =
 		useState<boolean>(true);
 	const changePasswordButtonRef = useRef<HTMLButtonElement>(null);
-
-	const decodeJWT = () => {
-		axios
-			.get(DECODE_JWT_ROUTE, {
-				params: { token: sessionStorage.getItem("jwt") },
-			})
-			.then((res) => {
-				if (res.status === 200) {
-					setUserData(res.data as jwt_decoded_response);
-				} else {
-					navigate(`/${SIGNOUT}`);
-				}
-			})
-			.catch(() => {
-				navigate(`/${SIGNOUT}`);
-			});
-	};
-
-	const getAccessTo = () => {
-		if (!userData) return;
-		axios
-			.get(GET_PERMISSIONS, {
-				headers: {
-					auth: `${userData.role} ${sessionStorage.getItem("jwt")}`,
-				},
-			})
-			.then((res) => {
-				if (res.status === 200) setAccessTo(res.data.access_to);
-			});
-	};
 
 	const onChangePasswordClicked = () => {
 		setChangePasswordInfoText("Loading...");
@@ -107,14 +80,6 @@ const Dashboard = () => {
 					changePasswordButtonRef.current.disabled = false;
 			});
 	};
-
-	useEffect(() => {
-		decodeJWT();
-	}, []);
-
-	useEffect(() => {
-		getAccessTo();
-	}, [userData]);
 
 	return (
 		<>
@@ -160,20 +125,14 @@ const Dashboard = () => {
 						"SEE_QUESTIONS",
 						"USER_ACCESS_CONTROL",
 					].includes(access)
-				) && (
-					<AdditionalControls
-						userData={userData}
-						accessTo={accessTo}
-					/>
-				)}
+				) && <AdditionalControls />}
 		</>
 	);
 };
 
-const AdditionalControls = ({
-	userData,
-	accessTo,
-}: AdditionalControls_type) => {
+const AdditionalControls = () => {
+	const { userData, accessTo, JWT } = useContext(AuthenticationContext);
+
 	const [users, setUsers] = useState<User_type[]>();
 	const [projects, setProjects] = useState<Project_type[]>([]);
 	const [feedbackQuestions, setFeedbackQuestions] = useState<
@@ -184,7 +143,7 @@ const AdditionalControls = ({
 		axios
 			.get(GET_ALL_USERS_ROUTE, {
 				headers: {
-					auth: `${userData.role} ${sessionStorage.getItem("jwt")}`,
+					auth: `${userData?.role} ${JWT}`,
 				},
 			})
 			.then((res) => {
@@ -203,7 +162,7 @@ const AdditionalControls = ({
 		axios
 			.get(GET_ALL_PROJECTS_ROUTE, {
 				headers: {
-					auth: `${userData.role} ${sessionStorage.getItem("jwt")}`,
+					auth: `${userData?.role} ${JWT}`,
 				},
 			})
 			.then((res) => {
@@ -222,7 +181,7 @@ const AdditionalControls = ({
 		axios
 			.get(GET_ALL_FEEDBACK_QUESTIONS_ROUTE, {
 				headers: {
-					auth: `${userData.role} ${sessionStorage.getItem("jwt")}`,
+					auth: `${userData?.role} ${JWT}`,
 				},
 			})
 			.then((res) => {
@@ -248,24 +207,19 @@ const AdditionalControls = ({
 	return (
 		<Container containerHeading="Additional Controls" headerType="l2">
 			{accessTo.includes("REGISTER_USER") && (
-				<CreateUserModule
-					userData={userData}
-					getAllUsers={getAllUsers}
-				/>
+				<CreateUserModule getAllUsers={getAllUsers} />
 			)}
 			{accessTo.includes("SEE_USERS") && (
 				<ShowAllUsersModule users={users} />
 			)}
 			{accessTo.includes("CREATE_PROJECTS") && (
 				<AddProjectModule
-					userData={userData}
 					getAllProjects={getAllProjects}
 					getAllFeedbackQuestions={getAllFeedbackQuestions}
 				/>
 			)}
 			{accessTo.includes("ASSIGN_USER_TO_PROJECTS") && (
 				<AssignProjectsModule
-					userData={userData}
 					users={users}
 					projects={projects}
 					getAllProjects={getAllProjects}
@@ -281,7 +235,6 @@ const AdditionalControls = ({
 				)}
 			{accessTo.includes("CREATE_QUESTIONS") && (
 				<AddFeedbackQuestionsModule
-					userData={userData}
 					projects={projects}
 					getAllProjects={getAllProjects}
 					getAllFeedbackQuestions={getAllFeedbackQuestions}
@@ -300,9 +253,10 @@ const AdditionalControls = ({
 };
 
 const CreateUserModule = ({
-	userData,
 	getAllUsers,
 }: DashboardAdditionalControls_subtype) => {
+	const { userData, JWT } = useContext(AuthenticationContext);
+
 	const [newUserName, setNewUserName] = useState<string>("");
 	const [newUserEmail, setNewUserEmail] = useState<string>("");
 	const [newUserPass, setNewUserPass] = useState<string>(DEFAULT_PASSWORD);
@@ -326,9 +280,7 @@ const CreateUserModule = ({
 				},
 				{
 					headers: {
-						auth: `${userData?.role} ${sessionStorage.getItem(
-							"jwt"
-						)}`,
+						auth: `${userData?.role} ${JWT}`,
 					},
 				}
 			)
@@ -452,10 +404,11 @@ const ShowAllUsersModule = ({ users }: DashboardAdditionalControls_subtype) => {
 };
 
 const AddProjectModule = ({
-	userData,
 	getAllProjects,
 	getAllFeedbackQuestions,
 }: DashboardAdditionalControls_subtype) => {
+	const { userData, JWT } = useContext(AuthenticationContext);
+
 	const [projectToAdd, setProjectToAdd] = useState<string>("");
 
 	const [projectInfoText, projectInfoSetter] = useState<string>("");
@@ -472,9 +425,7 @@ const AddProjectModule = ({
 				},
 				{
 					headers: {
-						auth: `${userData?.role} ${sessionStorage.getItem(
-							"jwt"
-						)}`,
+						auth: `${userData?.role} ${JWT}`,
 					},
 				}
 			)
@@ -528,12 +479,13 @@ const AddProjectModule = ({
 };
 
 const AssignProjectsModule = ({
-	userData,
 	users,
 	projects,
 	getAllProjects,
 	getAllUsers,
 }: DashboardAdditionalControls_subtype) => {
+	const { userData, JWT } = useContext(AuthenticationContext);
+
 	const [
 		projectSelectedForAssignmentToUser,
 		setProjectSelectedForAssignmentToUser,
@@ -555,9 +507,7 @@ const AssignProjectsModule = ({
 				},
 				{
 					headers: {
-						auth: `${userData?.role} ${sessionStorage.getItem(
-							"jwt"
-						)}`,
+						auth: `${userData?.role} ${JWT}`,
 					},
 				}
 			)
@@ -698,11 +648,12 @@ const ShowAllProjectsAndUsers = ({
 };
 
 const AddFeedbackQuestionsModule = ({
-	userData,
 	projects,
 	getAllProjects,
 	getAllFeedbackQuestions,
 }: DashboardAdditionalControls_subtype) => {
+	const { userData, JWT } = useContext(AuthenticationContext);
+
 	const [
 		projectSelectedForFeedbackQuestion,
 		setProjectSelectedForFeedbackQuestion,
@@ -724,9 +675,7 @@ const AddFeedbackQuestionsModule = ({
 				},
 				{
 					headers: {
-						auth: `${userData?.role} ${sessionStorage.getItem(
-							"jwt"
-						)}`,
+						auth: `${userData?.role} ${JWT}`,
 					},
 				}
 			)

@@ -17,34 +17,37 @@ import ChangePassword from "./components/ChangePassword";
 import Feedback from "./components/Feedback";
 import Timesheet from "./components/Timesheet";
 import NotFound from "./components/NotFound";
+import AuthenticationProvider from "./components/AuthenticationProvider";
 
 function App() {
 	return (
-		<div className="font-montserrat relative min-h-screen bg-gray-200 text-gray-900">
-			<BrowserRouter>
-				<Routes>
-					<Route path={ROOT} element={<Navigation />}>
-						<Route path={ROOT} element={<LoginPage />} />
-						<Route path={SIGNOUT} element={<SignOut />} />
+		<AuthenticationProvider>
+			<div className="font-montserrat relative min-h-screen bg-gray-200 text-gray-900">
+				<BrowserRouter>
+					<Routes>
+						<Route path={ROOT} element={<Navigation />}>
+							<Route path={ROOT} element={<LoginPage />} />
+							<Route path={SIGNOUT} element={<SignOut />} />
 
-						<Route path={DASHBOARD} element={<Dashboard />} />
+							<Route path={DASHBOARD} element={<Dashboard />} />
 
-						<Route path={FEEDBACK} element={<Feedback />} />
-						<Route path={TIMESHEET} element={<Timesheet />} />
+							<Route path={FEEDBACK} element={<Feedback />} />
+							<Route path={TIMESHEET} element={<Timesheet />} />
 
-						<Route
-							path={FORGOT_PASSWORD}
-							element={<ForgotPassword />}
-						/>
-						<Route
-							path={CHANGE_PASSWORD}
-							element={<ChangePassword />}
-						/>
-					</Route>
-					<Route path="*" element={<NotFound />} />
-				</Routes>
-			</BrowserRouter>
-		</div>
+							<Route
+								path={FORGOT_PASSWORD}
+								element={<ForgotPassword />}
+							/>
+							<Route
+								path={CHANGE_PASSWORD}
+								element={<ChangePassword />}
+							/>
+						</Route>
+						<Route path="*" element={<NotFound />} />
+					</Routes>
+				</BrowserRouter>
+			</div>
+		</AuthenticationProvider>
 	);
 }
 

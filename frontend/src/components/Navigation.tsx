@@ -1,9 +1,17 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
-import { DASHBOARD, FEEDBACK, SIGNOUT, TIMESHEET } from "../ts/Consts";
+import {
+	DASHBOARD,
+	DECODE_JWT_ROUTE,
+	FEEDBACK,
+	SIGNOUT,
+	TIMESHEET,
+} from "../ts/Consts";
+import axios from "axios";
+import { jwt_decoded_response } from "../ts/Types";
+import { AuthenticationContext } from "./AuthenticationProvider";
 
-// const isLoggedIn = false;
 const Navigation = () => {
 	return (
 		<>
@@ -15,19 +23,33 @@ const Navigation = () => {
 
 const NavBar = () => {
 	const [isMenuOpen, setMenuOpen] = useState<boolean>(false);
-	const [isLoggedIn, setLoggedIn] = useState<boolean>(false);
+	const { userData } = useContext(AuthenticationContext);
 
-	useEffect(() => {
-		setInterval(() => {
-			setLoggedIn(sessionStorage.getItem("jwt") !== null);
-		}, 200);
-	}, []);
+	// const [userData, setUserData] = useState<jwt_decoded_response>();
+	// const getUserData = () => {
+	// 	axios
+	// 		.get(DECODE_JWT_ROUTE, {
+	// 			params: { token: sessionStorage.getItem("jwt") },
+	// 		})
+	// 		.then((res) => {
+	// 			if (res.status === 200) {
+	// 				setUserData(res.data as jwt_decoded_response);
+	// 			}
+	// 		});
+	// };
+
+	// useEffect(() => {
+	// 	getUserData();
+	// 	// setInterval(() => {
+	// 	// 	getUserData();
+	// 	// }, 5000);
+	// }, [sessionStorage.getItem("jwt")]);
 
 	return (
 		<nav className="md:fixed w-full md:w-72 md:min-h-screen bg-gray-300 text-center md:text-left flex flex-col justify-between">
 			<section>
 				<h1 className="font-medium text-3xl py-6 px-8">APP NAME</h1>
-				{isLoggedIn ? (
+				{userData ? (
 					<section className="relative md:px-8">
 						<button
 							className="py-2 md:hidden font-medium"
@@ -65,11 +87,13 @@ const NavBar = () => {
 				)}
 			</section>
 
-			<section className="hidden h-20 md:flex flex-col justify-between items-center">
-				<hr className="w-10/12" />
-				<p>INFO</p>
-				<hr className="w-10/12" />
-			</section>
+			{userData && (
+				<section className="hidden h-20 md:flex flex-col justify-between items-center">
+					<hr className="w-10/12" />
+					<p>{userData.email}</p>
+					<hr className="w-10/12" />
+				</section>
+			)}
 		</nav>
 	);
 };
