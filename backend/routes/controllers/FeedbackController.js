@@ -46,7 +46,7 @@ const FeedbackUploadController = async (req, res) => {
 const GetOwnFeedbacksController = async (req, res) => {
   try {
     const { dateStart, dateEnd } = req.body;
-    if (!dateStart || !dateEnd)
+    if (!dateStart || !dateEnd || dateStart === '' || dateEnd === '')
       return res.status(202).json({ err: "dates not passed" });
 
     const foundFeedback = await FeedbackAnswer.findOne({
@@ -64,7 +64,28 @@ const GetOwnFeedbacksController = async (req, res) => {
   }
 };
 
+const GetUserFeedbackController = async (req, res) => {
+  try {
+    const { dateStart, dateEnd, email } = req.body;
+    if (!dateStart || !dateEnd || !email || dateStart === '' || dateEnd === '' || email === '')
+      return res.status(202).json({ err: "All fields are required" });
+
+    const foundFeedback = await FeedbackAnswer.findOne({
+      email,
+      dateStart,
+      dateEnd,
+    });
+    if (!foundFeedback)
+      return res.status(202).json({ err: "No feedbacks for the current user" });
+
+    return res.status(200).json({ feedback: foundFeedback });
+  } catch (error) {
+    return res.status(500).json({ msg: "Internal Error", err: error });
+  }
+}
+
 module.exports = {
   FeedbackUploadController,
   GetOwnFeedbacksController,
+  GetUserFeedbackController,
 };
