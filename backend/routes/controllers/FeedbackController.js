@@ -4,6 +4,18 @@ const FeedbackUploadController = async (req, res) => {
   try {
     const { projectFeedbackAnswers, dateStart, dateEnd } = req.body;
 
+    if (
+      projectFeedbackAnswers.every((projectFeedbackAnswer) =>
+        projectFeedbackAnswer.checkedAnswers.every(
+          (checkedAnswer) => checkedAnswer === ""
+        )
+      )
+    )
+      return res.status(202).json({ err: "Atleast one rating must be given" });
+
+    if (!dateStart || !dateEnd)
+      return res.status(202).json({ err: "dates not passed" });
+
     const foundFeedback = await FeedbackAnswer.findOne({
       email: req.decoded.email,
       dateStart,
@@ -34,6 +46,9 @@ const FeedbackUploadController = async (req, res) => {
 const GetOwnFeedbacksController = async (req, res) => {
   try {
     const { dateStart, dateEnd } = req.body;
+    if (!dateStart || !dateEnd)
+      return res.status(202).json({ err: "dates not passed" });
+
     const foundFeedback = await FeedbackAnswer.findOne({
       email: req.decoded.email,
       dateStart,
