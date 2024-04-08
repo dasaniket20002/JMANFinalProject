@@ -21,7 +21,7 @@ const DecodeJWTController = async (req, res) => {
 
 const GetAllPermissionsController = async (req, res) => {
   try {
-    const role = req.decoded.role;
+    const role = req.query.role;
     const authLevels = await AuthLevels.findOne({ role: role });
     if (!authLevels) return res.status(202).json({ err: "Role not Found" });
 

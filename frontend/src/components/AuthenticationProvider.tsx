@@ -47,8 +47,8 @@ const AuthenticationProvider = ({ children }: OptionalChildren) => {
 		if (!userData) return;
 		axios
 			.get(GET_PERMISSIONS, {
-				headers: {
-					auth: `${userData.role} ${JWT}`,
+				params: {
+					role: userData.role,
 				},
 			})
 			.then((res) => {

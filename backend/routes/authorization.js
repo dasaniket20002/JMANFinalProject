@@ -19,7 +19,7 @@ require("dotenv").config();
 // recieves {token} from params
 router.get("/decodeJWT", DecodeJWTController);
 
-router.get("/getPermissions", authorize, GetAllPermissionsController);
+router.get("/getPermissions", GetAllPermissionsController);
 
 // GET ALL USERS
 // must have headers as { 'Auth':role + " " + jwt }

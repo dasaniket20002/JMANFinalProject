@@ -11,7 +11,10 @@ const Table = ({
 	children,
 	className,
 	bulged,
-}: OptionalChildren & OptionalClassname & Bulged) => {
+	tableType,
+}: OptionalChildren &
+	OptionalClassname &
+	Bulged & { tableType?: "auto" | "fixed" }) => {
 	return (
 		<div
 			className={twMerge(
@@ -20,7 +23,14 @@ const Table = ({
 				className
 			)}
 		>
-			<table className="table-auto w-full">{children}</table>
+			<table
+				className={twMerge(
+					"table-auto table w-full",
+					tableType && tableType === "fixed" && "table-fixed"
+				)}
+			>
+				{children}
+			</table>
 		</div>
 	);
 };

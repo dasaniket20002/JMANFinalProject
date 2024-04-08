@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState, useEffect, useRef, useContext } from "react";
+import { useState, useEffect, useRef, useContext, Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 import {
 	DEFAULT_PASSWORD,
@@ -13,6 +13,7 @@ import {
 	ADD_PROJECT_ROUTE,
 	ADD_FEEDBACK_QUESTION_ROUTE,
 	ASSIGN_USER_TO_PROJECT_ROUTE,
+	GET_PERMISSIONS,
 } from "../ts/Consts";
 import {
 	DashboardAdditionalControls_subtype,
@@ -805,13 +806,140 @@ const ShowAllProjectsAndFeedbackQuestionsModule = ({
 };
 
 const UserAccessControl = () => {
+	// const { userData, JWT } = useContext(AuthenticationContext);
+
+	const [allAccessesForAdmin, setAllAccessesForAdmin] = useState<string[]>(
+		[]
+	);
+	const getAllAccessesForAdmin = () => {
+		axios
+			.get(GET_PERMISSIONS, { params: { role: "admin" } })
+			.then((res) => {
+				if (res.status === 200) {
+					setAllAccessesForAdmin(res.data.access_to);
+				}
+			});
+	};
+
+	const [accessValues, setAccessValues] = useState<boolean[][]>([]);
+	const getAllAccessValues = () => {
+		ROLES.forEach((role, roleIndex) => {
+			axios
+				.get(GET_PERMISSIONS, {
+					params: { role: role },
+				})
+				.then((res) => {
+					if (res.status === 200) {
+						var accessValuesM = [...accessValues];
+						allAccessesForAdmin.forEach(
+							(adminAccess, accessIndex) => {
+								if (res.data.access_to.includes(adminAccess)) {
+									if (!accessValuesM[roleIndex])
+										accessValuesM[roleIndex] = [];
+									accessValuesM[roleIndex][accessIndex] =
+										true;
+								}
+							}
+						);
+						setAccessValues(accessValuesM);
+					}
+				})
+				.catch((err) => console.log(err));
+		});
+	};
+
+	const setAccessValueAt = (
+		roleIndex: number,
+		accessIndex: number,
+		value: boolean
+	) => {
+		let accessValuesM = [...accessValues];
+		accessValuesM[roleIndex][accessIndex] = value;
+		setAccessValues(accessValuesM);
+	};
+
+	const [infoText, infoSetter] = useState<string>("");
+	const setInfoText = (text: string) =>
+		infoSetter(`${text}~${Math.random()}`);
+	const [isInfoError, setInfoError] = useState<boolean>(true);
+
+	const onPermissionUploadClicked = () => {};
+
+	useEffect(() => {
+		getAllAccessesForAdmin();
+	}, []);
+
+	useEffect(() => {
+		getAllAccessValues();
+	}, [allAccessesForAdmin]);
+
 	return (
 		<Container containerHeading="Access Control" headerType="l3">
-			{ROLES.map((role, index) => (
-				<span key={index} className="capitalize">
-					{role}
-				</span>
-			))}
+			<Table>
+				<TableHead>
+					<TableHeader className="text-sm font-normal px-2"></TableHeader>
+					{allAccessesForAdmin.map((access, idx) => (
+						<TableHeader
+							key={idx}
+							className="text-sm font-medium px-2"
+						>
+							{access}
+						</TableHeader>
+					))}
+				</TableHead>
+				<TableBody>
+					{ROLES.map((role, roleIndex) => (
+						<TableRow key={roleIndex}>
+							<TableCell className="capitalize font-medium">
+								{role}
+							</TableCell>
+							{allAccessesForAdmin.map((_, accessIndex) => (
+								<TableCell
+									key={accessIndex}
+									className="text-sm font-normal"
+								>
+									<input
+										type="checkbox"
+										disabled={
+											role === "admin" ? true : false
+										}
+										readOnly={
+											role === "admin" ? true : false
+										}
+										checked={
+											accessValues &&
+											accessValues[roleIndex] &&
+											accessValues[roleIndex][accessIndex]
+												? accessValues[roleIndex][
+														accessIndex
+												  ]
+												: false
+										}
+										onChange={
+											role !== "admin"
+												? (e) =>
+														setAccessValueAt(
+															roleIndex,
+															accessIndex,
+															e.target.checked
+														)
+												: undefined
+										}
+										className="scale-125"
+									/>
+								</TableCell>
+							))}
+						</TableRow>
+					))}
+				</TableBody>
+			</Table>
+
+			<Button bulged>Assign Permissions</Button>
+			<InfoDisplay
+				isError={isInfoError}
+				infoText={infoText}
+				className="-mt-12"
+			/>
 		</Container>
 	);
 };
