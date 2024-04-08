@@ -13,6 +13,7 @@ import {
   User_type,
 } from "../ts/Types";
 import {
+  FEEDBACK,
   GET_ALL_USERS_ROUTE,
   GET_OWN_PROJECTS_ROUTE,
   SIGNOUT,
@@ -111,7 +112,10 @@ const Timesheet = () => {
     taskSelectArrayDefaultValue
   );
   const [numRowsPerActivity, setNumRowsPerActivity] = useState([
-    ...(Array.from({ length: TIMESHEET_ACTIVITIES.length }) as number[]),
+    ...(Array.from(
+      { length: TIMESHEET_ACTIVITIES.length },
+      () => 1 as number
+    ) as number[]),
   ]);
   const [timesheetActivities, setTimesheetActivities] =
     useState(TIMESHEET_ACTIVITIES);
@@ -151,7 +155,10 @@ const Timesheet = () => {
     setProjectSelectDataArray(projectSelectArrayDefaultValue);
     setTaskSelectDataArray(taskSelectArrayDefaultValue);
     setNumRowsPerActivity([
-      ...(Array.from({ length: timesheetActivities.length }) as number[]),
+      ...(Array.from(
+        { length: TIMESHEET_ACTIVITIES.length },
+        () => 1 as number
+      ) as number[]),
     ]);
   };
 
@@ -189,6 +196,13 @@ const Timesheet = () => {
         if (res.status === 200) {
           setInfoText(res.data.msg);
           setInfoError(false);
+
+          navigate(`/${FEEDBACK}`, {
+            state: {
+              dateStart: getDateStr(dateStart),
+              dateEnd: getDateStr(dateEnd),
+            },
+          });
         } else {
           setInfoText(res.data.err);
           setInfoError(true);

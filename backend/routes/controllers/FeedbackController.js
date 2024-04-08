@@ -59,7 +59,7 @@ const GetOwnFeedbacksController = async (req, res) => {
 
     return res.status(200).json({ feedback: foundFeedback });
   } catch (error) {
-    console.err(error);
+    console.log(error);
     return res.status(500).json({ msg: "Internal Error", err: error });
   }
 };

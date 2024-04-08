@@ -248,7 +248,14 @@ const Feedback = () => {
     <>
       <Container containerHeading="Feedback" headerType="l1" />
       <ContainerForm
-        containerHeading="Projects and Questions"
+        containerHeading={
+          <>
+            <section className="font-medium text-3xl">
+              Projects and Questions
+            </section>
+            <section className="font-normal text-xl pt-5">{`${dateStart} - ${dateEnd}`}</section>
+          </>
+        }
         headerType="l2"
         className="py-6"
         onSubmit={(e) => {
@@ -354,54 +361,25 @@ const Feedback = () => {
           className="-my-6"
         />
       </ContainerForm>
+
+      {userData &&
+        accessTo &&
+        accessTo.some((access) => ["SEE_USERS"].includes(access)) && (
+          <AdditionalControls />
+        )}
     </>
   );
 };
 
-export default Feedback;
+const AdditionalControls = () => {
+  return (
+    <Container containerHeading="Additional Controls" headerType="l2">
+      <Container
+        containerHeading="Users' Feedbacks"
+        headerType="l3"
+      ></Container>
+    </Container>
+  );
+};
 
-{
-  /*
-<section key={idx} className="flex flex-col gap-4">
-                    <span className="text-xl font-medium">
-                      {feedbackQuestion.question}
-                    </span>
-                    <Radio
-                      options={["1", "2", "3", "4", "5"]}
-                      onChange={() => {}}
-                      value={""}
-                      name={
-                        (feedbackQuestion && project
-                          ? feedbackQuestion._id + project._id
-                          : "") + "Radio"
-                      }
-                      id={
-                        (feedbackQuestion && project
-                          ? feedbackQuestion._id + project._id
-                          : "") + "Radio"
-                      }
-                      label="Give Rating"
-                      className="rounded bg-gray-100 px-2 py-4 shadow-md"
-                      bulged
-                    />
-                    <Input
-                      onChange={() => {}}
-                      value={""}
-                      name={
-                        (feedbackQuestion && project
-                          ? feedbackQuestion._id + project._id
-                          : "") + "Input"
-                      }
-                      id={
-                        (feedbackQuestion && project
-                          ? feedbackQuestion._id + project._id
-                          : "") + "Input"
-                      }
-                      type="text"
-                      placeholder="Feedback..."
-                      label="Additional Feedback"
-                      bulged
-                    />
-                  </section>
-*/
-}
+export default Feedback;
