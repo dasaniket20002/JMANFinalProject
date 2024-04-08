@@ -47,21 +47,6 @@ const Radio = ({
           </span>
         ))}
       </div>
-
-      {/* <input
-        className={twMerge(
-          "p-2 rounded outline-none transition shadow-md focus:shadow-lg border border-transparent focus:border-gray-600",
-          bulged && "-mx-2",
-          textCenter && "text-center"
-        )}
-        type="radio"
-        name={name}
-        id={id}
-        placeholder={placeholder}
-        onChange={onChange}
-        value={value}
-        disabled={disabled}
-      /> */}
     </span>
   );
 };

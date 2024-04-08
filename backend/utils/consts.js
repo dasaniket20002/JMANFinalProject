@@ -18,6 +18,7 @@ const ROUTE_PERMISSION_DEFS = {
   "/timesheet/fetchOwn": "TIMESHEET",
   "/timesheet/fetchAll": "TIMESHEET_ALL",
   "/feedback/upload": "FEEDBACK",
+  "/feedback/getOwnFeedbacks": "FEEDBACK",
 };
 
 const GET_TASK_PERFORMED = (req) => {

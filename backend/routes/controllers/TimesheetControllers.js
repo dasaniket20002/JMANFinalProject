@@ -45,7 +45,7 @@ const TimesheetUploadController = async (req, res) => {
       date_start === "" ||
       date_end === "" ||
       JSON.stringify(project_select_data) ===
-      JSON.stringify(projectSelectDefaultValue) ||
+        JSON.stringify(projectSelectDefaultValue) ||
       JSON.stringify(row_data) === JSON.stringify(rowDataDefaultValue)
     )
       return res.status(202).json({ err: "All fields required" });
@@ -82,6 +82,7 @@ const TimesheetUploadController = async (req, res) => {
 
     return res.status(200).json({ msg: "Saved Timesheet" });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ msg: "Internal Error", err: error });
   }
 };
@@ -90,12 +91,7 @@ const TimesheetFetchController = async (req, res) => {
   try {
     const { date_start, date_end } = req.query;
 
-    if (
-      !date_start ||
-      !date_end ||
-      date_start === "" ||
-      date_end === ""
-    )
+    if (!date_start || !date_end || date_start === "" || date_end === "")
       return res.status(202).json({ err: "All fields required" });
 
     const timesheet = await Timesheet.findOne({
@@ -103,12 +99,11 @@ const TimesheetFetchController = async (req, res) => {
       date_end,
       email: req.decoded.email,
     });
-    if (!timesheet)
-      return res.status(202).json({ err: "Timesheet not found" });
+    if (!timesheet) return res.status(202).json({ err: "Timesheet not found" });
 
     return res.status(200).json({ timesheet: timesheet });
-
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ msg: "Internal Error", err: error });
   }
 };
@@ -132,15 +127,14 @@ const TimesheetFetchAllController = async (req, res) => {
       email: email,
     });
 
-    if (!timesheet)
-      return res.status(202).json({ err: 'timesheet not found' });
+    if (!timesheet) return res.status(202).json({ err: "timesheet not found" });
 
     return res.status(200).json({ timesheet: timesheet });
-
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ msg: "Internal Error", err: error });
   }
-}
+};
 
 module.exports = {
   TimesheetUploadController,

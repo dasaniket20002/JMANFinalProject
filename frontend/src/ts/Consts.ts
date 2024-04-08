@@ -19,6 +19,7 @@ export const TIMESHEET_FETCH_ROUTE = `${SERVER_IP}/timesheet/fetchOwn`;
 export const TIMESHEET_FETCH_ALL_ROUTE = `${SERVER_IP}/timesheet/fetchAll`;
 
 export const FEEDBACK_UPLOAD_ROUTE = `${SERVER_IP}/feedback/upload`;
+export const FEEDBACK_GET_OWN_ROUTE = `${SERVER_IP}/feedback/getOwnFeedbacks`;
 
 export const CHANGE_PASSWORD_ROUTE = `${SERVER_IP}/changepass`;
 export const CHANGE_PASSWORD_REQUESTING_EMAIL_ROUTE = `${SERVER_IP}/changepass/getLinkedEmail`;
