@@ -31,7 +31,32 @@ const GetAllPermissionsController = async (req, res) => {
   }
 };
 
+const AssignPermissionsController = async (req, res) => {
+  try {
+    const { roleFor, permissions } = req.body;
+    if (!roleFor || roleFor === "")
+      return res.status(202).json({ err: "Role not provided" });
+
+    const authLevels = await AuthLevels.findOne({ role: roleFor });
+    if (!authLevels) {
+      const newAuthLevels = new AuthLevels({
+        role: roleFor,
+        access_to: permissions,
+      });
+      await newAuthLevels.save();
+      return res.status(200).json({ msg: "Role not Found, new Role added" });
+    }
+
+    authLevels.access_to = permissions;
+    await authLevels.save();
+    return res.status(200).json({ msg: "Role Updated" });
+  } catch (error) {
+    return res.status(500).json({ msg: "Internal Error", err: error });
+  }
+};
+
 module.exports = {
   DecodeJWTController,
   GetAllPermissionsController,
+  AssignPermissionsController,
 };

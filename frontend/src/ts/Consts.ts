@@ -8,6 +8,8 @@ export const ASSIGN_USER_TO_PROJECT_ROUTE = `${SERVER_IP}/authenticate/assignPro
 
 export const GET_PERMISSIONS = `${SERVER_IP}/authorize/getPermissions`;
 export const DECODE_JWT_ROUTE = `${SERVER_IP}/authorize/decodeJWT`;
+export const UPDATE_PERMISSIONS = `${SERVER_IP}/authorize/updatePermissions`;
+
 export const GET_ALL_USERS_ROUTE = `${SERVER_IP}/authorize/getAllUsers`;
 export const GET_ALL_PROJECTS_ROUTE = `${SERVER_IP}/authorize/getAllProjects`;
 export const GET_OWN_PROJECTS_ROUTE = `${SERVER_IP}/authorize/getOwnProjects`;

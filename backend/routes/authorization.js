@@ -12,6 +12,7 @@ const {
 const {
   DecodeJWTController,
   GetAllPermissionsController,
+  AssignPermissionsController,
 } = require("./controllers/AuthorizationControllers");
 require("dotenv").config();
 
@@ -53,5 +54,7 @@ router.get(
   authorize,
   GetOwnFeedbackQuestionsController
 );
+
+router.post("/updatePermissions", authorize, AssignPermissionsController);
 
 module.exports = router;

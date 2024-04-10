@@ -6,6 +6,7 @@ const ROUTE_PERMISSION_DEFS = {
   "/authenticate/assignProject": "ASSIGN_USER_TO_PROJECTS",
   "/authorize/getPermissions": "SEE_PERMISSIONS",
   "/authorize/decodeJWT": "",
+  "/authorize/updatePermissions": "USER_ACCESS_CONTROL",
   "/authorize/getAllUsers": "SEE_USERS",
   "/authorize/getAllProjects": "SEE_PROJECTS",
   "/authorize/getOwnProjects": "SEE_OWN_PROJECTS",

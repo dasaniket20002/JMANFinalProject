@@ -1,0 +1,26 @@
+{{
+    config(
+        tags=['basic', 'staging']
+    )
+}}
+
+WITH
+
+PROJECTSTOFEEDBACKQUESTIONS AS (
+    SELECT * FROM {{ source('raw_src', 'projectstofeedbackquestions') }}
+),
+
+TRIMMED AS (
+    SELECT * FROM PROJECTSTOFEEDBACKQUESTIONS
+    WHERE C1 NOT LIKE 'projectName'
+),
+
+STG_PROJECTSTOFEEDBACKQUESTIONS AS (
+    SELECT 
+        CAST(C1 AS VARCHAR) AS PROJECT_NAME,
+        CAST(C2 AS VARCHAR) AS FEEDBACKQUESTION_NAME
+    FROM 
+        TRIMMED
+)
+
+SELECT * FROM STG_PROJECTSTOFEEDBACKQUESTIONS
