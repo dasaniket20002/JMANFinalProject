@@ -1,51 +1,51 @@
-id,name
-b50a26e1-e402-40f2-b4d3-bece517857a5,Pierce and Sons Solution
-534819a3-6ed5-4b3b-982e-f952e606bf1d,Weaver Group Solution
-7d045fb3-2ffb-4c9e-bf3a-12973c4e2731,Harrison LLC Solution
-3daa47dd-30ad-44e0-9889-20849f1f71bf,Harris-Randolph Initiative
-26af498a-2693-479e-8435-226d8eb9e180,Knox-Pope Initiative
-6f412776-0411-4517-a282-504350fb2614,Yoder Inc Initiative
-a708fc56-674e-42be-bb88-20e219326d28,"Hale, Gray and Martinez Initiative"
-619459f8-14f3-4304-8e5e-181999d7889c,Shaw-Lara Solution
-abaf73cb-15a9-479c-ad7e-076d787eb3de,"Johnson, Pierce and Davis Project"
-3706011e-9485-4054-adc2-0d570617b03c,Lewis PLC Project
-df6c3695-1820-491d-9f84-68ec997e52f3,Shaffer-Donovan Initiative
-00c35d94-0cdb-482a-b8f4-773804d9e5d4,Love Inc Initiative
-d9a6f98e-9c73-40dc-80f5-ecb8447db3c8,"Silva, Wright and Schmidt Initiative"
-f575f45f-30b4-4e3b-b95b-5b0a769d4822,Davis-Sullivan Project
-b1b18e1f-7be2-4495-aba1-8f88b22b639b,Nguyen-Cox Initiative
-6a870829-af15-4639-9223-1d654cdc6eef,Wright PLC Solution
-8bcd7470-a96e-4faa-aa1c-2ed24622c876,Carson-Clayton Initiative
-0e13be87-0fc9-4565-912a-eba4e4851050,Thomas Inc Project
-67777866-f53e-47ba-8cb0-4a2734d5d6d6,Lucas Inc Initiative
-07bb27a3-bc42-421f-a909-40965322cbfc,"Lopez, Ramirez and Harris Initiative"
-1e2f9167-9c2e-4372-bf3d-04c7db8ab636,Warren-Ingram Initiative
-4279b9c6-6d28-4737-8692-16fdcf8cd5f0,"Adams, Stewart and Thompson Initiative"
-6ae2dc78-b9eb-474f-a09f-7e0d097a405a,"Rice, Jones and Harris Initiative"
-737eb5ce-137d-48ff-ad02-86450835fff9,Williams LLC Initiative
-c158f8cb-45fc-42ae-855e-7975dddd8562,Lam-Garrison Initiative
-5efbd56f-8f18-4643-b766-d66b916eb884,Ford-Gibson Project
-6f353620-4cca-47a7-91a3-e43557cebf57,Martinez Inc Solution
-01eeb075-566a-4d4e-84da-edcb382bf6ae,Roberts Ltd Initiative
-77e1a8cf-3f3a-483f-b463-1df319fdda63,Singh Ltd Solution
-9eb29289-b972-42ee-967b-bae61bf20f74,Morgan Inc Project
-aaf95563-404b-409f-a776-8e45f2d89c48,"Webster, Wiley and Phillips Project"
-f775b687-44dd-4e9e-8892-e6f3831a4e73,Bell-Henderson Project
-2c378a6c-d5f2-4d7f-b35c-5b16ff532ede,Sanchez Inc Initiative
-f406f6b6-3b31-4653-a5a0-fd2b627a03d7,Boyer Inc Solution
-d1e648a6-a642-4ff7-be47-c9c3e0565307,Vasquez PLC Initiative
-cdb675d7-c435-4f7e-824e-f9348a47c2b6,Nolan-Clark Initiative
-45ad8fdd-c4b2-4ded-863b-44114f1096ab,"Smith, Richard and Arroyo Project"
-e148ca49-d7b9-479f-b3c3-b2cd61b76ad4,Clark Group Initiative
-ff75547c-9d72-400f-80d2-1bc14d2262be,Hale-Aguilar Solution
-31e2ec01-c25d-40d2-a5d3-7c837a11b186,Miller Group Project
-ac779d43-df8a-40f1-8a11-16fd37e8985c,Bailey-Jimenez Solution
-22c41c95-1c8c-4ded-9ecc-be896c152ec8,"Johnson, Williams and Stanley Solution"
-c96f9939-9fd6-4e6f-a0f8-f244ee9a2afb,Walker-Evans Initiative
-0f356135-0d0b-49b6-a538-2f8173d67390,White-Holland Solution
-ef65f700-ade1-4eff-a960-433a4aa8a297,Rodriguez-Fletcher Solution
-852d2c73-53a7-4e3d-8860-8ea5b6594796,"Monroe, Campbell and Mack Initiative"
-5ce7e561-bc54-494a-ad2f-0f1f454aea55,White-Lozano Project
-de2f1ebd-cc51-4975-90bb-eee2fd049509,"Lam, Fisher and Abbott Project"
-8b18b61c-2283-4dbe-b905-2b58e02d7dbe,"Hall, Copeland and Fuller Solution"
-99a09010-da51-452d-a3fc-f0e78bc23929,Lyons-Harrison Initiative
+id,name,domain
+50053ffa-96aa-4494-94b9-d9330b81fe9d,Gonzalez-Becker Initiative,Telecommunications
+d4e0fec4-0117-435d-abd8-52afd1d20ea2,"Nguyen, Peters and Walker Initiative",Healthcare
+22d2a96c-bb93-40af-8682-cdea6b45fc48,Abbott-Carter Solution,Cybersecurity
+c3de9633-a182-4841-9ca5-3b251ca9fe35,Martin-Ball Project,Financial Services
+05f36a38-8c60-4f6a-b5f2-51e666f33bc6,Brown Inc Initiative,Transportation and Logistics
+1dfa8aa1-af13-461f-b671-d238523e05b2,Stevenson-Johnson Project,E-commerce
+b65d69e0-06cd-483b-bd7f-39358f91dc26,Serrano and Sons Solution,Cybersecurity
+f46aa804-2724-496f-9b52-82014c7ee1e0,"Brown, Vasquez and Bush Initiative",Telecommunications
+f6ffb81a-a76f-42b6-93d7-5b70eb25b8f7,Cabrera Inc Project,Telecommunications
+28deece0-a11d-4b90-8a28-dc3556cdf8d7,Hurley Group Project,E-commerce
+e0bb24af-4a1f-4889-a6ec-fb4f239a2563,"Donovan, Tyler and Cabrera Solution",Cybersecurity
+5c88073f-c560-4ee1-8562-b2a7b35337c0,Lindsey Inc Initiative,Education Technology
+728684ec-894f-42a5-b4e6-7a336e3fda3b,Taylor LLC Project,Healthcare
+ecd82428-41f8-43aa-bf31-585f0aa048ac,"Sanchez, Jackson and Scott Initiative",Education Technology
+025be9ae-89c1-4b32-995e-aedb18fca76f,"Jackson, Nguyen and Crawford Project",E-commerce
+747eae87-f0bb-4637-babc-6a92f367f4df,Love Ltd Solution,Healthcare
+2366ad84-78cc-4f11-965f-de7a58d0571f,"Austin, Barnes and Marquez Initiative",Artificial Intelligence and Machine Learning
+460d2c09-23a1-467b-82a7-79eed87550f5,Dalton Group Solution,Education Technology
+867ed8d7-6e71-4696-b1d6-26189a193d02,Simpson-Caldwell Project,Media and Entertainment
+c39dce76-ed4f-48ad-b0b9-5521263ad9be,Ford LLC Solution,E-commerce
+0d2f733f-e9e4-40e4-b4e4-a8505552a0bd,Harris-Nicholson Project,Education Technology
+f45d2164-93a4-454d-ab94-3e4bbda3b25c,Henry-Sandoval Project,E-commerce
+cf604edb-f6fe-4839-891c-2924e84e8c7f,"Chase, Molina and Mccoy Initiative",E-commerce
+967f9f5d-7963-4e29-9848-1248ff2650c1,Lin-Johnson Solution,Artificial Intelligence and Machine Learning
+dfee7f15-a70f-4914-8ed0-c2f723e12188,Malone-Mcclure Initiative,Renewable Energy
+8ea3b8e4-169b-42f0-a332-462f311384aa,Scott and Sons Project,Financial Services
+8530c4f3-1f02-444a-a4aa-9ab166c86418,"Brown, Sims and Davis Initiative",Transportation and Logistics
+1637b3d9-6718-4e14-8805-c1b30383f151,Butler-Acosta Solution,E-commerce
+66bfb659-1062-425b-a3e8-44e3d6e26fab,Lopez Inc Initiative,Artificial Intelligence and Machine Learning
+35ac7a93-6c1c-49c0-962e-c940458104ef,Li-Schwartz Project,Artificial Intelligence and Machine Learning
+ecaf3ed4-9e5f-48a0-b237-a58a667ba773,Castillo PLC Solution,Healthcare
+9d91358c-3967-4bf8-9cc1-9316b34fd462,"Lang, Allen and Hayes Solution",Telecommunications
+8f042fb8-208e-4bf7-b51e-f319fbd70273,Snow-Lee Project,Transportation and Logistics
+10b96a3c-3b4c-432b-87ab-873b9a0f84eb,Greene Inc Initiative,Healthcare
+71fd0e5c-aa55-4e2f-8912-f8eeaaca8158,"Turner, Evans and Reed Solution",Transportation and Logistics
+a7b586e1-79a7-4fa2-bbe1-aaf75dce7f9c,"Mckinney, Ross and Reed Solution",Artificial Intelligence and Machine Learning
+de57cab8-a354-4725-8bfc-058f5b33d81a,"Gonzalez, Anderson and Walsh Project",Renewable Energy
+a90a69e6-24b7-4151-85c5-1c8c5c148ef8,Meyers-Nunez Project,Renewable Energy
+620431bc-5ce7-40bc-95a0-7011e93f3482,Ward-Berg Initiative,E-commerce
+466d7e61-cab4-4d56-8265-e72796e3fd62,"Jimenez, Mendez and Lewis Initiative",Media and Entertainment
+2fe7ae2e-42c8-4f3c-83ab-69077e6d50a5,Patrick Inc Initiative,Cybersecurity
+4ddc4c7d-696e-4483-8191-48425cef993d,Austin-Clark Project,Financial Services
+b8e010b3-2263-4540-b241-96ea25fb207d,"Strickland, Roberts and Dixon Solution",E-commerce
+3fdf4e28-b4af-4a73-bbed-dcb9bee37532,"Stevens, Andrews and Medina Initiative",Artificial Intelligence and Machine Learning
+32a81f98-0a1a-459f-b574-5485fa0c22e0,"Adams, Mcgee and Baker Initiative",Cybersecurity
+597cf17f-e8c0-4b2d-8ab4-c86e6446d7c8,Hernandez-Wells Initiative,Media and Entertainment
+0ccc4164-f8bc-483e-8bbe-6275158d1dd1,Schneider and Sons Solution,Cybersecurity
+e4d1f609-ca47-4fa4-8e1e-f694d42b0690,Herrera Ltd Initiative,Renewable Energy
+bed4eb6e-4c98-416a-92ac-0d9e1ede04c3,Moreno-Jackson Project,Artificial Intelligence and Machine Learning
+d36578e6-b107-4994-9acc-0d21e487037a,"Diaz, Lam and Maldonado Project",Cybersecurity

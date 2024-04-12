@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: UsersPerRole
+    description: counts the number of users per role
+    columns:
+      - name: ROLE
+        description: Roles column
+        tests:
+          - unique
+          - not_null
+      - name: COUNT
+        description: Number of users in that role
+        tests:
+          - not_null

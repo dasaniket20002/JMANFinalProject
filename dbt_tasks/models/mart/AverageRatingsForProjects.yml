@@ -1,0 +1,16 @@
+version: 2
+
+models:
+  - name: AverageRatingsForProjects
+    description: Counts the total days spent on a project and its effeciency
+    columns:
+      - name: PROJECT_NAME
+        description: Project Name
+        tests:
+          - not_null
+          - unique
+
+      - name: AVERAGE_RATING
+        description: Average Rating for the Project
+        tests:
+          - not_null

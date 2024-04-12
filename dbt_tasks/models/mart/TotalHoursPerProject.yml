@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: TotalHoursPerProject
+    description: Counts the total hours spent on a project
+    columns:
+      - name: PROJECT_SELECTED
+        description: Project for which the Total Hours needs to be found
+        tests:
+          - not_null
+          - unique
+
+      - name: TOTAL_HOURS
+        description: Total Hours spent on the Project
+        tests:
+          - not_null
+
+      - name: TOTAL_HOURS_WEEKENDS
+        description: Total Hours spent on the Project on Weekends
+        tests:
+          - not_null
+
+      - name: TOTAL_HOURS_WEEKDAYS
+        description: Total Hours spent on the Project on Weekdays
+        tests:
+          - not_null

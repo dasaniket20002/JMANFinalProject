@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: AverageRatingPerUserPerProject
+    description: Counts the total days spent on a project and its effeciency
+    columns:
+      - name: USER_EMAIL
+        description: Users Emails
+        tests:
+          - not_null
+
+      - name: NAME
+        description: Users names
+        tests:
+          - not_null
+
+      - name: PROJECT_NAME
+        description: Name of Project for which Average Rating is given
+        tests:
+          - not_null
+
+      - name: DOMAIN
+        description: Domain of the project
+        tests:
+          - not_null
+
+      - name: AVERAGE_RATING
+        description: Average Rating for the Project
+        tests:
+          - not_null

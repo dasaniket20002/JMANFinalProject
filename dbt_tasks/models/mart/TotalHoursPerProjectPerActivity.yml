@@ -1,0 +1,30 @@
+version: 2
+
+models:
+  - name: TotalHoursPerProjectPerActivity
+    description: Counts the total hours the user have worked on a project
+    columns:
+      - name: PROJECT_SELECTED
+        description: Project for which the Total Hours needs to be found
+        tests:
+          - not_null
+
+      - name: ACTIVITY_NAME
+        description: Activity Name for the Project
+        tests:
+          - not_null
+
+      - name: TOTAL_HOURS
+        description: Total Hours users have worked on the Project for the Activity
+        tests:
+          - not_null
+
+      - name: TOTAL_HOURS_WEEKENDS
+        description: Total Hours users have worked on the Project for the Activity on Weekends
+        tests:
+          - not_null
+
+      - name: TOTAL_HOURS_WEEKDAYS
+        description: Total Hours the user have worked on the Project for the Activity on Weekdays
+        tests:
+          - not_null

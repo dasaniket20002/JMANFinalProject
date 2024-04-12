@@ -1,0 +1,31 @@
+version: 2
+
+models:
+  - name: TotalHoursPerUser
+    description: Counts the total hours the user has worked for
+    columns:
+      - name: USER_EMAIL
+        description: Emails of the users
+        tests:
+          - not_null
+          - unique
+
+      - name: NAME
+        description: Names of users
+        tests:
+          - not_null
+
+      - name: TOTAL_HOURS
+        description: Total Hours the user has worked on the Activity
+        tests:
+          - not_null
+
+      - name: TOTAL_HOURS_WEEKENDS
+        description: Total Hours the user has worked on the Activity on Weekends
+        tests:
+          - not_null
+
+      - name: TOTAL_HOURS_WEEKDAYS
+        description: Total Hours the user has worked on the Activity on Weekdays
+        tests:
+          - not_null

@@ -1,0 +1,41 @@
+version: 2
+
+models:
+  - name: DaySpansForProject
+    description: Counts the total days spent on a project and its effeciency
+    columns:
+      - name: PROJECT_SELECTED
+        description: Project Name
+        tests:
+          - not_null
+          - unique
+
+      - name: DATE_START
+        description: Start date for the project
+        tests:
+          - not_null
+
+      - name: DATE_END
+        description: End date for the project
+        tests:
+          - not_null
+
+      - name: TOTAL_DAYS_SPAN
+        description: Total number of days the project is held
+        tests:
+          - not_null
+
+      - name: TOTAL_DAYS_WORKED_FOR
+        description: Total number of days the project is worked on
+        tests:
+          - not_null
+
+      - name: DAYS_GAPS
+        description: Total number of days the project is not worked on
+        tests:
+          - not_null
+
+      - name: EFFICIENCY
+        description: How efficiently is the project being worked on
+        tests:
+          - not_null
