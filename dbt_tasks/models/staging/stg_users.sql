@@ -10,26 +10,14 @@ RAW_DATA AS (
     SELECT * FROM {{ source('raw_src', 'users') }}
 ),
 
-REMOVE_HEADERS AS (
-    SELECT * FROM RAW_DATA
-    WHERE 
-        C1 NOT LIKE 'email'
-        OR
-        C2 NOT LIKE 'pass'
-        OR
-        C3 NOT LIKE 'role'
-        OR
-        C4 NOT LIKE 'name'
-),
-
 CAST_DATA AS (
     SELECT 
-        CAST(C1 AS VARCHAR) AS EMAIL,
-        CAST(C2 AS VARCHAR) AS PASS,
-        CAST(C3 AS VARCHAR) AS ROLE,
-        CAST(C4 AS VARCHAR) AS NAME
+        CAST(EMAIL AS VARCHAR) AS EMAIL,
+        CAST(PASS AS VARCHAR) AS PASS,
+        CAST(ROLE AS VARCHAR) AS ROLE,
+        CAST(NAME AS VARCHAR) AS NAME
     FROM 
-        REMOVE_HEADERS
+        RAW_DATA
 )
 
 SELECT * FROM CAST_DATA
