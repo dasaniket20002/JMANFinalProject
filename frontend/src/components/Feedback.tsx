@@ -43,16 +43,15 @@ const Feedback = () => {
 			? location.state.dateEnd
 			: getDateStr(getlastDayOfWeek());
 
-	const { userData, accessTo, JWT, isAuthenticating } = useContext(
+	const { userData, accessTo, JWT, isJWTInvalid } = useContext(
 		AuthenticationContext
 	);
 
 	useEffect(() => {
-		if (isAuthenticating) return;
-		if (!JWT) {
+		if (!JWT || isJWTInvalid) {
 			navigate(`/${SIGNOUT}`);
 		}
-	}, [JWT, isAuthenticating]);
+	}, [JWT, isJWTInvalid]);
 
 	const [projects, setProjects] = useState<Project_type[]>([]);
 	const getOwnProjects = () => {

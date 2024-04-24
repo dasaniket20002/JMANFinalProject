@@ -8,13 +8,13 @@ export const AuthenticationContext = createContext<{
 	accessTo: string[];
 	JWT: string;
 	setJWT: React.Dispatch<React.SetStateAction<string>> | undefined;
-	isAuthenticating: boolean;
+	isJWTInvalid: boolean;
 }>({
 	userData: undefined,
 	accessTo: [],
 	JWT: "",
 	setJWT: undefined,
-	isAuthenticating: false,
+	isJWTInvalid: false,
 });
 
 const AuthenticationProvider = ({ children }: OptionalChildren) => {
@@ -24,7 +24,7 @@ const AuthenticationProvider = ({ children }: OptionalChildren) => {
 		localStorage.getItem("jwt") as string
 	);
 
-	const [isAuthenticating, setIsAuthenticating] = useState<boolean>(false);
+	const [isJWTInvalid, setJWTInvalid] = useState<boolean>(false);
 
 	const getUserData = () => {
 		axios
@@ -34,12 +34,15 @@ const AuthenticationProvider = ({ children }: OptionalChildren) => {
 			.then((res) => {
 				if (res.status === 200) {
 					setUserData(res.data as jwt_decoded_response);
+					setJWTInvalid(false);
 				} else {
 					setUserData(undefined);
+					setJWTInvalid(true);
 				}
 			})
 			.catch((_) => {
 				setUserData(undefined);
+				setJWTInvalid(true);
 			});
 	};
 
@@ -54,16 +57,17 @@ const AuthenticationProvider = ({ children }: OptionalChildren) => {
 			.then((res) => {
 				if (res.status === 200) {
 					setAccessTo(res.data.access_to);
+					setJWTInvalid(false);
 				} else {
 					setAccessTo([]);
+					setJWTInvalid(true);
 				}
 			})
-			.catch((_) => setAccessTo([]));
+			.catch((_) => {
+				setAccessTo([]);
+				setJWTInvalid(true);
+			});
 	};
-
-	useEffect(() => {
-		setIsAuthenticating(true);
-	}, [setJWT]);
 
 	useEffect(() => {
 		getUserData();
@@ -71,12 +75,11 @@ const AuthenticationProvider = ({ children }: OptionalChildren) => {
 
 	useEffect(() => {
 		getAccessTo();
-		setIsAuthenticating(false);
 	}, [userData]);
 
 	return (
 		<AuthenticationContext.Provider
-			value={{ userData, accessTo, JWT, setJWT, isAuthenticating }}
+			value={{ userData, accessTo, JWT, setJWT, isJWTInvalid }}
 		>
 			{children}
 		</AuthenticationContext.Provider>
