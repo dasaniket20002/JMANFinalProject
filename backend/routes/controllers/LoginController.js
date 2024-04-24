@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const User = require("../../schemas/User");
+const { JWT_EXPIRY_TIME } = require("../../utils/consts");
 
 const LoginController = async (req, res) => {
   try {
@@ -23,7 +24,7 @@ const LoginController = async (req, res) => {
     };
 
     const jwt_token = jwt.sign(userObj, process.env.JWT_SECRET, {
-      expiresIn: "1d",
+      expiresIn: JWT_EXPIRY_TIME,
     });
     return res.status(200).json({ msg: "User found", jwt: jwt_token });
   } catch (error) {
