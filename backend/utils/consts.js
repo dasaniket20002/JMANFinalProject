@@ -29,7 +29,7 @@ const GET_TASK_PERFORMED = (req) => {
   ];
 };
 
-const JWT_EXPIRY_TIME = "120s";
+const JWT_EXPIRY_TIME = "1d";
 
 module.exports = {
   ROUTE_PERMISSION_DEFS,
